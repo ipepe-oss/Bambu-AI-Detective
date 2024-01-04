@@ -1,8 +1,10 @@
 version: '3.7'
 services:
   bambu_p1_streamer:
-    build: .
+    build: ./streamer
     ports:
       - "1984:1984"
     env_file:
       - .env
+  ai_print_analyer:
+    build: ./ai-print-analyzer

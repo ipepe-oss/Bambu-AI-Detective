@@ -1,5 +1,19 @@
-# Bambu P1 Camera Streamer
+# Bambu P1 Camera Streamer + AI to detect spaghetti
+This is a dockerized version of the Bambu P1 Camera Streamer + AI to detect spaghetti.
 
+## RUN
+Plug in the right values for the environment variables into `.env`
+```
+docker-compose up -d --build
+```
+
+### Example `.env`
+```
+PRINTER_ADDRESS=192.168.1.111
+PRINTER_ACCESS_CODE=12345678
+```
+
+## Streamer
 Only tested on a P1S. I would expect it to work for a p1p camera. I would not expect this to work on an X1/X1C - the codecs are different and I don't believe that local network streaming is enabled. 
 
 Built and tested on Debian 12 / amd64. Other platforms may not work.
@@ -8,7 +22,7 @@ Derived from https://github.com/hisptoot/BambuSource2Raw.
 
 https://github.com/AlexxIT/go2rtc does most of the work.
 
-# DEPENDENCIES
+### DEPENDENCIES
 
 Bambu Studio Proprietary Plugin Library
 ```
@@ -22,19 +36,13 @@ wget https://github.com/AlexxIT/go2rtc/releases/download/v1.6.2/go2rtc_linux_amd
 chmod a+x go2rtc_linux_amd64
 ```
 
-# RUN
-Plug in the right values for the environment variables
-```
-docker-compose up -d --build
-```
-
-# ACCESS
-### Index Page (only the MJPEG parts will work)
+### ACCESS
+#### Index Page (only the MJPEG parts will work)
 ```
 http://localhost:1984/links.html?src=p1s
 ```
 
-### MJPEG url
+#### MJPEG url
 ```
 http://localhost:1984/api/stream.mjpeg?src=p1s
 ```
