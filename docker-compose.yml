@@ -1,0 +1,8 @@
+version: '3.7'
+services:
+  bambu_p1_streamer:
+    build: .
+    ports:
+      - "1984:1984"
+    env_file:
+      - .env
