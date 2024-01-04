@@ -36,7 +36,7 @@ http://localhost:1984/links.html?src=p1s
 
 ### MJPEG url
 ```
-http://localhosst:1984/api/stream.mjpeg?src=p1s
+http://localhost:1984/api/stream.mjpeg?src=p1s
 ```
 
 
