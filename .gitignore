@@ -5,3 +5,4 @@ data/
 *.png
 *.jpg
 *.log
+!docs/images/web-dashboard.png
