@@ -183,7 +183,7 @@ def main():
     session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
     while True:
         fetched_filename = "".join(["/tmp/fetched_",str(time.time()),".png"])
-        streamer_hostname = os.getenv("STREAMER_HOSTNAME", "streamer")
+        streamer_hostname = os.getenv("STREAMER_HOSTNAME", "localhost")
         fetch_image_command = ["/usr/bin/ffmpeg", "-i", f"http://{streamer_hostname}:1984/api/stream.mjpeg?src=p1s", "-vframes:v", "1", fetched_filename]
         # Fetch the image using the user provided command.
         print("Executing ", fetch_image_command)
