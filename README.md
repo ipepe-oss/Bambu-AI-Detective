@@ -13,6 +13,27 @@ PRINTER_ADDRESS=192.168.1.111
 PRINTER_ACCESS_CODE=12345678
 ```
 
+### docker-compose.yml
+
+```yaml
+version: '3.7'
+services:
+  app:
+    build: ./
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "1984:1984"
+      - "8080:8080"
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m
+```
+
+
+
 ## Streamer
 Only tested on a P1S. I would expect it to work for a p1p camera. I would not expect this to work on an X1/X1C - the codecs are different and I don't believe that local network streaming is enabled. 
 
