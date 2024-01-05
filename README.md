@@ -11,6 +11,7 @@ docker-compose up -d --build
 ```
 PRINTER_ADDRESS=192.168.1.111
 PRINTER_ACCESS_CODE=12345678
+REFRESH_RATE=10
 ```
 
 ### docker-compose.yml

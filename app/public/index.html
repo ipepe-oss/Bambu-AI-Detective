@@ -31,13 +31,15 @@
 
     fetch('/last_score_data.json').then(function (response) {
       try {
-        var img = document.createElement('img');
-        img.src = '/last_image.png' + '?' + new Date().getTime();
-        app.appendChild(img);
         var data = JSON.parse(response);
         var data_max_score = data["max_score"];
         var data_timestamp = data["timestamp"];
         var data_threshold = data["threshold"];
+
+        var img = document.createElement('img');
+        img.src = ['/last_image.png?', data_timestamp || new Date().getTime()].join('');
+        app.appendChild(img);
+
         if (parseInt(data['refresh_rate']) > 3){
           nextRunIn = parseInt(data['refresh_rate']) * 1000 / 3; // 3 times faster than server refresh rate
         }
