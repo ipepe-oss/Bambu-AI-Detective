@@ -3,7 +3,7 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import numpy as np
-import time, sys, subprocess, datetime, os
+import time, sys, subprocess, datetime, os, json
 
 def image_to_tensor(image_path):
     # Load the image
@@ -91,8 +91,7 @@ def draw_boxes(image_path, output_path, boxes, confidences, threshold=0.1):
     draw.text((20,20), datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fill="green", font=font)
 
     # Save or display the image
-    image.save("tmp_"+output_path)
-    os.replace("tmp_"+output_path, output_path)
+    image.save(output_path)
     # image.show()
 
 def show_model_info(model_path):
@@ -127,7 +126,7 @@ def show_model_info(model_path):
 # Evaluate the specified image, return the max score of the
 # different identified boxes of failure and as side effect create a new
 # image with the highlighted boxes.
-def evaluate_image(inference_session,in_image_path,out_image_path):
+def evaluate_image(inference_session,in_image_path,out_image_path, threshold=0.1):
     # Load and preprocess the input image inputTensor
     inputTensor,orig_w,orig_h = image_to_tensor(in_image_path)
 
@@ -140,12 +139,21 @@ def evaluate_image(inference_session,in_image_path,out_image_path):
 
     boxes = outputs[0][0]
     confs = outputs[1][0]
-    show_matching_boxes(boxes,confs,image_width=orig_w,image_height=orig_h,threshold=0.01)
-    draw_boxes(in_image_path,out_image_path,boxes,confs,threshold=0.01)
+    show_matching_boxes(boxes,confs,image_width=orig_w,image_height=orig_h,threshold=threshold)
+    draw_boxes(in_image_path,out_image_path,boxes,confs,threshold=threshold)
     max_score = 0
     for item in confs:
         if item[0] > max_score: max_score = item[0]
-    return max_score
+
+    sorted_boxes = sorted(zip(boxes, confs), key=lambda x: x[1][0], reverse=True)
+
+    score_data = {
+        "max_score": str(max_score),
+        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "threshold": str(threshold)
+    }
+
+    return score_data
 
 def process_single(image_path):
     model_path = "./model-weights-5a6b1be1fa.onnx"
@@ -153,15 +161,33 @@ def process_single(image_path):
     max_score = evaluate_image(session,image_path,"processed.png")
     print("Max score:", max_score)
 
+def write_file(filename, content):
+    f = open(filename,"w")
+    f.write(content)
+    f.close()
+
 def main():
     print("Starting...")
-    if len(sys.argv) > 1:
-        process_single(sys.argv[1])
-    else:
-        print("No image specified, using test1.png")
-        process_single("./test1.png")
-        print("Sleeping 5 minutes...")
-        time.sleep(300)
+    model_path = "./model-weights-5a6b1be1fa.onnx"
+    session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
+    while True:
+        fetched_filename = "".join(["/tmp/fetched_",str(time.time()),".png"])
+        streamer_hostname = os.getenv("STREAMER_HOSTNAME", "streamer")
+        fetch_image_command = ["/usr/bin/ffmpeg", "-i", f"http://{streamer_hostname}:1984/api/stream.mjpeg?src=p1s", "-vframes:v", "1", fetched_filename]
+        # Fetch the image using the user provided command.
+        print("Executing ", fetch_image_command)
+        process = subprocess.run(fetch_image_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        error_code = process.returncode
+        if error_code != 0:
+            print("Warning: Fetch image script exited with an error: ", error_code)
+        else:
+            print("Processing image...")
+            score_data = evaluate_image(session,fetched_filename,"".join([fetched_filename,".processed.png"]))
+            json_score_data = json.dumps(score_data)
+            write_file("./public/last_score_data.json", json_score_data)
+            os.replace("".join([fetched_filename,".processed.png"]), "./public/last_image.png")
+
+        time.sleep(5)
 
 if __name__ == "__main__":
     main()

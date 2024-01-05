@@ -1,0 +1,88 @@
+<html>
+<head>
+    <title>AI Print Analyzer</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+</head>
+<body>
+<div id="app"></div>
+<script>
+  console.log("script start")
+  var fetch = function (url) {
+    return new Promise(function (resolve, reject) {
+      var req = new XMLHttpRequest();
+      req.open('GET', url, true);
+      req.onload = function () {
+        if (req.status === 200) {
+          resolve(req.response);
+        } else {
+          reject(new Error(req.statusText));
+        }
+      };
+      req.onerror = function () {
+        reject(new Error(req.statusText));
+      };
+      req.send();
+    });
+  };
+  var appRun = function () {
+    var app = document.getElementById('app');
+    app.innerHTML = '';
+
+    fetch('http://localhost:8080/last_score_data.json').then(function (response) {
+      var img = document.createElement('img');
+      img.src = 'http://localhost:8080/last_image.png' + '?' + new Date().getTime();
+      app.appendChild(img);
+      var data = JSON.parse(response);
+      var data_max_score = data["max_score"];
+      var data_timestamp = data["timestamp"];
+      var data_threshold = data["threshold"];
+
+      var table = document.createElement('table');
+      var thead = document.createElement('thead');
+      var tbody = document.createElement('tbody');
+      var tr = document.createElement('tr');
+      var th = document.createElement('th');
+      var td = document.createElement('td');
+      var text = document.createTextNode('max_score');
+      th.appendChild(text);
+      tr.appendChild(th);
+      th = document.createElement('th');
+      text = document.createTextNode('Timestamp');
+      th.appendChild(text);
+      tr.appendChild(th);
+      th = document.createElement('th');
+      text = document.createTextNode('Threshold');
+      th.appendChild(text);
+      tr.appendChild(th);
+      thead.appendChild(tr);
+      table.appendChild(thead);
+
+      tr = document.createElement('tr');
+      td = document.createElement('td');
+      text = document.createTextNode(data_max_score);
+      td.appendChild(text);
+      tr.appendChild(td);
+      td = document.createElement('td');
+      text = document.createTextNode(data_timestamp);
+      td.appendChild(text);
+      tr.appendChild(td);
+      td = document.createElement('td');
+      text = document.createTextNode(data_threshold);
+      td.appendChild(text);
+      tr.appendChild(td);
+      tbody.appendChild(tr);
+
+
+      table.appendChild(tbody);
+      app.appendChild(table);
+    }).catch(function (error) {
+      console.log(error);
+    });
+  }
+
+  setInterval(appRun, 2 * 1000);
+  appRun();
+</script>
+
+</body>
+</html>

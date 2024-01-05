@@ -2,10 +2,10 @@ FROM python:3.9-slim-buster
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y ffmpeg wget unzip
+RUN apt-get update && apt-get install -y ffmpeg wget
 RUN wget https://tsd-pub-static.s3.amazonaws.com/ml-models/model-weights-5a6b1be1fa.onnx
-RUN pip install onnxruntime pillow numpy
+RUN pip install onnxruntime pillow numpy honcho
 
 COPY . .
 
-CMD [ "python3", "-u", "run.py" ]
+CMD [ "honcho", "start" ]

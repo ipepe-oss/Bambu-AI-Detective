@@ -4,6 +4,8 @@ services:
     build: ./ai-print-analyzer
     environment:
       STREAMER_HOST: bambu_p1_streamer
+    ports:
+      - "8080:8080"
     volumes:
       - './data:/data'
 #      - bambu_p1_streamer

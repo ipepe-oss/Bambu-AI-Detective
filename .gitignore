@@ -1,4 +1,6 @@
+docker-compose.dev.yml
 build/
+data/
 .env
 *.png
 *.jpg
