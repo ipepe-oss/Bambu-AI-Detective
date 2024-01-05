@@ -1,6 +1,13 @@
 # Bambu P1 Camera Streamer + AI to detect spaghetti
 This is a dockerized version of the Bambu P1 Camera Streamer + AI to detect spaghetti.
 
+This is based on work of:
+ * https://github.com/antirez/failed-3d-prints-bot
+ * https://github.com/hisptoot/BambuSource2Raw
+ * https://github.com/slynn1324/BambuP1Streamer
+ * https://bjh21.me.uk/bedstead/
+ * https://github.com/AlexxIT/go2rtc
+
 ## RUN
 Plug in the right values for the environment variables into `.env`
 ```
