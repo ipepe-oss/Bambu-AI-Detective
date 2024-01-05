@@ -28,10 +28,10 @@
     var app = document.getElementById('app');
     app.innerHTML = '';
 
-    fetch('http://localhost:8080/last_score_data.json').then(function (response) {
+    fetch('/last_score_data.json').then(function (response) {
       try {
         var img = document.createElement('img');
-        img.src = 'http://localhost:8080/last_image.png' + '?' + new Date().getTime();
+        img.src = '/last_image.png' + '?' + new Date().getTime();
         app.appendChild(img);
         var data = JSON.parse(response);
         var data_max_score = data["max_score"];
