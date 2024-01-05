@@ -47,6 +47,11 @@ services:
         max-size: 50m
 ```
 
+## Web Dashboard
+
+Visit http://localhost:8080 to see the web dashboard with current ai detection status.
+![Web Dashboard](docs/images/web-dashboard.png)
+
 ## Architecture
 1. As a basis we are using python image. 
 2. In this python image container we are running https://github.com/nickstenning/honcho (python port of foreman) to run multiple processes in one container.
@@ -54,13 +59,6 @@ services:
 4. The second process is the web dashboard. It is a simple index.html page that pulls json and image from AI detector
 5. The third process is the AI detector. It is based on https://github.com/antirez/failed-3d-prints-bot
 6. Everything is dockerized and can be run with docker-compose
-
-
-## Web Dashboard
-
-Visit http://localhost:8080 to see the web dashboard with current ai detection status.
-![Web Dashboard](docs/images/web-dashboard.png)
-
 
 ## Streamer
 Only tested on a P1S. I would expect it to work for a p1p camera. I would not expect this to work on an X1/X1C - the codecs are different and I don't believe that local network streaming is enabled. 
