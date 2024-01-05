@@ -33,6 +33,11 @@ services:
 ```
 
 
+## Web Dashboard
+
+Visit http://localhost:8080 to see the web dashboard with current ai detection status.
+![Web Dashboard](docs/images/web-dashboard.png)
+
 
 ## Streamer
 Only tested on a P1S. I would expect it to work for a p1p camera. I would not expect this to work on an X1/X1C - the codecs are different and I don't believe that local network streaming is enabled. 
