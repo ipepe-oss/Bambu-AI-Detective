@@ -66,14 +66,13 @@ def draw_boxes(image_path, output_path, boxes, confidences, threshold=0.1):
     sorted_boxes = sorted(zip(boxes, confidences), key=lambda x: x[1][0], reverse=True)
 
     max_draw_boxes = 5
-    already_drawn_boxes = 0
+    already_drawn_boxes = []
     for box, confidence in sorted_boxes:
-        if already_drawn_boxes >= max_draw_boxes:
+        if already_drawn_boxes.__len__() >= max_draw_boxes:
             break
         confidence = confidence[0]
         if confidence < threshold:
             continue
-        already_drawn_boxes += 1
 
         x_min, y_min, x_max, y_max = box[0]
         x_min *= image.width
@@ -81,11 +80,23 @@ def draw_boxes(image_path, output_path, boxes, confidences, threshold=0.1):
         x_max *= image.width
         y_max *= image.height
 
-        draw.rectangle([x_min,y_min,x_max,y_max], outline="red", width=2)
+        # dont draw boxes that are too close to each other
+        can_draw = True
+        for drawn_box in already_drawn_boxes:
+            drawn_box_x_min = drawn_box[0]
+            drawn_box_y_min = drawn_box[1]
+            drawn_box_x_max = drawn_box[2]
+            drawn_box_y_max = drawn_box[3]
 
-        # Draw the confidence score
-        score_text = f"{confidence:.2f}"
-        draw.text((x_min,y_min), score_text, fill="red", font=font)
+            # TODO: break, can_draw=False if overlapping
+
+        if can_draw == True:
+            draw.rectangle([x_min,y_min,x_max,y_max], outline="red", width=2)
+
+            # Draw the confidence score
+            score_text = f"{confidence:.2f}"
+            draw.text((x_min,y_min), score_text, fill="red", font=font)
+            already_drawn_boxes.append([x_min, y_min, x_max, y_max])
 
     # Write the current time as well.
     draw.text((20,20), datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fill="green", font=font)

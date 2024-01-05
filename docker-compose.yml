@@ -1,25 +1,14 @@
 version: '3.7'
 services:
-  ai_print_analyer:
-    build: ./ai-print-analyzer
-    environment:
-      STREAMER_HOST: bambu_p1_streamer
+  app:
+    build: ./app
+    restart: unless-stopped
+    env_file:
+      - .env
     ports:
+      - "1984:1984"
       - "8080:8080"
-    volumes:
-      - './data:/data'
-#      - bambu_p1_streamer
-#  bambu_p1_streamer:
-#    build: ./streamer
-#    ports:
-#      - "1984:1984"
-#    env_file:
-#      - .env
-#  operator:
-#    build: ./operator
-#    links:
-#      - bambu_p1_streamer
-#      - ai_print_analyer
-#    environment:
-#        STREAMER_HOST: bambu_p1_streamer
-#        ANALYZER_HOST: ai_print_analyer
+    logging:
+      driver: json-file
+      options:
+        max-size: 50m

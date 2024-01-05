@@ -1,2 +1,0 @@
-analyzer: python3 -u analyzer.py
-web: cd public && python3 -m http.server 8080
