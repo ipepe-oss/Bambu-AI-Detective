@@ -45,6 +45,9 @@ def show_matching_boxes(boxes, confs, image_width=416, image_height=416, thresho
             # Print the adjusted bounding box and its confidence score
             print(f"Box: {x_min_pixel}, {y_min_pixel}, {x_max_pixel}, {y_max_pixel}, Confidence: {conf}")
 
+def overlapping_box(xmax1, xmin2, xmax2, xmin1):
+    return xmax1 >= xmin2 and xmax2 >= xmin1
+
 # Draw a box on the area with the maxium confidence score. Take the
 # orignal image path and the output path of the new processed image.
 # The threshold argument is used to write no box at all if the confidence
@@ -56,7 +59,7 @@ def draw_boxes(image_path, output_path, boxes, confidences, threshold=0.1):
 
     # Define font for confidence score
     # Calculate font size as a proportion of image width
-    font_size = image.width // 20
+    font_size = max(18,min(int(image.width // 20), int(image.height // 20)))
     try:
         font = ImageFont.truetype("./bedstead.otf", font_size)
     except IOError:
@@ -88,7 +91,9 @@ def draw_boxes(image_path, output_path, boxes, confidences, threshold=0.1):
             drawn_box_x_max = drawn_box[2]
             drawn_box_y_max = drawn_box[3]
 
-            # TODO: break, can_draw=False if overlapping
+            if overlapping_box(x_max, drawn_box_x_min, drawn_box_x_max, x_min) and overlapping_box(y_max, drawn_box_y_min, drawn_box_y_max, y_min):
+                can_draw = False
+                break
 
         if can_draw == True:
             draw.rectangle([x_min,y_min,x_max,y_max], outline="red", width=2)
