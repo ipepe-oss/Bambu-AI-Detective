@@ -203,8 +203,8 @@ def main():
             score_data["image_path"] = "".join([fetched_filename,".processed.png"])
             score_data["refresh_rate"] = refresh_rate
             json_score_data = json.dumps(score_data)
-            write_file("/app/public/last_score_data.json", json_score_data)
-            os.replace("".join([fetched_filename,".processed.png"]), "/app/public/last_image.png")
+            write_file("/app/web/last_score_data.json", json_score_data)
+            os.replace("".join([fetched_filename,".processed.png"]), "/app/web/last_image.png")
 
         time.sleep(refresh_rate)
 
