@@ -27,6 +27,7 @@
   var appRun = function () {
     var app = document.getElementById('app');
     app.innerHTML = '';
+    var nextRunIn = 2*1000; // 2 seconds
 
     fetch('/last_score_data.json').then(function (response) {
       try {
@@ -37,6 +38,9 @@
         var data_max_score = data["max_score"];
         var data_timestamp = data["timestamp"];
         var data_threshold = data["threshold"];
+        if (parseInt(data['refresh_rate']) > 3){
+          nextRunIn = parseInt(data['refresh_rate']) * 1000 / 3; // 3 times faster than server refresh rate
+        }
 
         var table = document.createElement('table');
         var thead = document.createElement('thead');
@@ -89,9 +93,11 @@
       app.appendChild(p);
       console.log(error);
     });
+    setTimeout(function(){
+      appRun()
+    }, nextRunIn);
   }
 
-  setInterval(appRun, 2 * 1000);
   appRun();
 </script>
 
