@@ -13,6 +13,7 @@ This is based on work of:
 This project is a collection of other projects. 
 Please see the individual projects for their licenses. 
 My changes are released under MIT.
+Because of licensing issues, I cannot build image and push it to docker hub. You need to build the image yourself.
 
 ## RUN - Getting started
 1. Clone this repo
