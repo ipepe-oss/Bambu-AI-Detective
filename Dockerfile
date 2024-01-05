@@ -1,7 +1,7 @@
 FROM gcc:12 AS builder
 WORKDIR /build
-COPY streamer/src/BambuP1Streamer.cpp /build/BambuP1Streamer.cpp
-COPY streamer/src/BambuTunnel.h /build/BambuTunnel.h
+COPY app/streamer/src/BambuP1Streamer.cpp /build/BambuP1Streamer.cpp
+COPY app/streamer/src/BambuTunnel.h /build/BambuTunnel.h
 RUN gcc BambuP1Streamer.cpp -o BambuP1Streamer
 
 RUN wget https://public-cdn.bambulab.com/upgrade/studio/plugins/01.04.00.15/linux_01.04.00.15.zip
@@ -18,7 +18,7 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y ffmpeg
 
-COPY . .
+COPY app .
 
 RUN cd /app/aidetector && pip install onnxruntime pillow numpy honcho
 
@@ -28,7 +28,6 @@ COPY --from=builder /build/go2rtc_linux_amd64 /app/streamer/go2rtc_linux_amd64
 COPY --from=builder /build/libBambuSource.so /app/streamer/libBambuSource.so
 COPY --from=builder /build/libbambu_networking.so /app/streamer/libbambu_networking.so
 RUN cd /app/streamer/ && chmod a+x go2rtc_linux_amd64 libBambuSource.so BambuP1Streamer
-COPY streamer/go2rtc.yaml /app/streamer/go2rtc.yaml
 
 EXPOSE 1984
 

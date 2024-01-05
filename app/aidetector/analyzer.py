@@ -195,8 +195,8 @@ def main():
             print("Processing image...")
             score_data = evaluate_image(session,fetched_filename,"".join([fetched_filename,".processed.png"]))
             json_score_data = json.dumps(score_data)
-            write_file("./public/last_score_data.json", json_score_data)
-            os.replace("".join([fetched_filename,".processed.png"]), "./public/last_image.png")
+            write_file("../public/last_score_data.json", json_score_data)
+            os.replace("".join([fetched_filename,".processed.png"]), "../public/last_image.png")
 
         time.sleep(5)
 
