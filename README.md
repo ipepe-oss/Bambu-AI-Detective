@@ -46,6 +46,14 @@ services:
         max-size: 50m
 ```
 
+## Architecture
+1. As a basis we are using python image. 
+2. In this python image container we are running https://github.com/nickstenning/honcho (python port of foreman) to run multiple processes in one container.
+3. The first process is the streamer. It is based on https://github.com/slynn1324/BambuP1Streamer
+4. The second process is the web dashboard. It is a simple index.html page that pulls json and image from AI detector
+5. The third process is the AI detector. It is based on https://github.com/antirez/failed-3d-prints-bot
+6. Everything is dockerized and can be run with docker-compose
+
 
 ## Web Dashboard
 
