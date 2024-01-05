@@ -2,11 +2,17 @@
 This is a dockerized version of the Bambu P1 Camera Streamer + AI to detect spaghetti.
 
 This is based on work of:
- * https://github.com/antirez/failed-3d-prints-bot
- * https://github.com/hisptoot/BambuSource2Raw
- * https://github.com/slynn1324/BambuP1Streamer
- * https://bjh21.me.uk/bedstead/
- * https://github.com/AlexxIT/go2rtc
+ * https://github.com/antirez/failed-3d-prints-bot - basis for the AI detection code
+ * https://github.com/hisptoot/BambuSource2Raw - basis for the streamer
+ * https://github.com/slynn1324/BambuP1Streamer - basis for this project
+ * https://bjh21.me.uk/bedstead/ - font for image overlay
+ * https://github.com/AlexxIT/go2rtc - streaming in the browser
+ * https://github.com/TheSpaghettiDetective/obico-server/ - neural network model
+
+## License
+This project is a collection of other projects. 
+Please see the individual projects for their licenses. 
+My changes are released under MIT.
 
 ## RUN
 Plug in the right values for the environment variables into `.env`
