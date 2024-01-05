@@ -14,11 +14,11 @@ This project is a collection of other projects.
 Please see the individual projects for their licenses. 
 My changes are released under MIT.
 
-## RUN
-Plug in the right values for the environment variables into `.env`
-```
-docker-compose up -d --build
-```
+## RUN - Getting started
+1. Clone this repo
+2. Plug in the right values for the environment variables into `.env`
+3. Run `docker-compose up -d --build`
+4. Visit http://localhost:8080 to see the web dashboard with current ai detection status.
 
 ### Example `.env`
 ```
