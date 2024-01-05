@@ -1,0 +1,38 @@
+Traceback (most recent call last):
+   File "/usr/local/lib/python3.9/site-packages/PIL/JpegImagePlugin.py", line 650, in _save
+     rawmode = RAWMODE[im.mode]
+ KeyError: 'RGBA'
+ 
+ The above exception was the direct cause of the following exception:
+ 
+ Traceback (most recent call last):
+   File "/app/run.py", line 160, in <module>
+     main()
+   File "/app/run.py", line 155, in main
+     process_single("./test1.png")
+   File "/app/run.py", line 151, in process_single
+     max_score = evaluate_image(session,image_path,"processed.jpg")
+   File "/app/run.py", line 142, in evaluate_image
+     draw_boxes(in_image_path,out_image_path,boxes,confs,threshold=0.01)
+   File "/app/run.py", line 92, in draw_boxes
+     image.save("tmp_"+output_path)
+   File "/usr/local/lib/python3.9/site-packages/PIL/Image.py", line 2439, in save
+     save_handler(self, fp, filename)
+   File "/usr/local/lib/python3.9/site-packages/PIL/JpegImagePlugin.py", line 653, in _save
+     raise OSError(msg) from e
+ OSError: cannot write mode RGBA as JPEG
+ Neural network inference milliseconds runtime:  272.8157043457031
+ Box: 297, 263, 367, 344, Confidence: 0.022130310535430908
+ Box: 231, 298, 337, 415, Confidence: 0.02383562922477722
+ Box: 295, 293, 374, 421, Confidence: 0.2295730710029602
+ Box: 331, 315, 380, 413, Confidence: 0.20243921875953674
+ Box: 241, 356, 338, 460, Confidence: 0.026956796646118164
+ Box: 290, 351, 367, 455, Confidence: 0.25034624338150024
+ Box: 325, 353, 385, 446, Confidence: 0.08603498339653015
+ Box: 260, 238, 387, 367, Confidence: 0.012746453285217285
+ Box: 204, 285, 373, 455, Confidence: 0.014896005392074585
+ Box: 266, 276, 382, 455, Confidence: 0.11578655242919922
+ Box: 189, 346, 384, 470, Confidence: 0.016228288412094116
+ Box: 261, 334, 395, 472, Confidence: 0.07527792453765869
+ Box: 230, 219, 408, 618, Confidence: 0.01097598671913147
+exited with code 1

@@ -6,5 +6,17 @@ services:
       - "1984:1984"
     env_file:
       - .env
+  operator:
+    build: ./operator
+    links:
+      - bambu_p1_streamer
+      - ai_print_analyer
+    environment:
+        STREAMER_HOST: bambu_p1_streamer
+        ANALYZER_HOST: ai_print_analyer
   ai_print_analyer:
     build: ./ai-print-analyzer
+    links:
+      - bambu_p1_streamer
+    environment:
+      STREAMER_HOST: bambu_p1_streamer

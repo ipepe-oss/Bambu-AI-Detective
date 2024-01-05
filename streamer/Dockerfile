@@ -21,4 +21,6 @@ COPY --from=builder /build/libbambu_networking.so /app/libbambu_networking.so
 RUN chmod a+x go2rtc_linux_amd64 libBambuSource.so BambuP1Streamer
 COPY go2rtc.yaml /app
 
+EXPOSE 1984
+
 CMD [ "./go2rtc_linux_amd64" ]
