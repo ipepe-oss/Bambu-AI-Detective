@@ -8,4 +8,4 @@ RUN pip install onnxruntime pillow numpy
 
 COPY . .
 
-CMD [ "python", "run.py" ]
+CMD [ "python3", "-u", "run.py" ]

@@ -54,36 +54,38 @@ def draw_boxes(image_path, output_path, boxes, confidences, threshold=0.1):
     image = Image.open(image_path)
     draw = ImageDraw.Draw(image)
 
-    # Define font for confidence score (optional, default font will be used if not specified)
+    # Define font for confidence score
+    # Calculate font size as a proportion of image width
+    font_size = image.width // 20
     try:
-        font = ImageFont.truetype("./bedstead.otf", 18)
+        font = ImageFont.truetype("./bedstead.otf", font_size)
     except IOError:
         font = ImageFont.load_default()
 
     # Iterate over the bounding boxes and confidences
-    # Find the best one, if any
-    max_box = None
-    max_confidence = None
-    for box, confidence in zip(boxes, confidences):
+    sorted_boxes = sorted(zip(boxes, confidences), key=lambda x: x[1][0], reverse=True)
+
+    max_draw_boxes = 5
+    already_drawn_boxes = 0
+    for box, confidence in sorted_boxes:
+        if already_drawn_boxes >= max_draw_boxes:
+            break
         confidence = confidence[0]
-        if confidence < threshold: continue
-        # Scale the bounding box back to the original image size
+        if confidence < threshold:
+            continue
+        already_drawn_boxes += 1
+
         x_min, y_min, x_max, y_max = box[0]
         x_min *= image.width
         y_min *= image.height
         x_max *= image.width
         y_max *= image.height
-        if max_confidence == None or max_confidence < confidence:
-            max_confidence = confidence
-            max_box = [x_min,y_min,x_max,y_max]
 
-    # Draw the bounding box
-    if max_confidence:
-        draw.rectangle(max_box, outline="red", width=2)
+        draw.rectangle([x_min,y_min,x_max,y_max], outline="red", width=2)
 
         # Draw the confidence score
-        score_text = f"{max_confidence:.2f}"
-        draw.text((max_box[0],max_box[1]), score_text, fill="red", font=font)
+        score_text = f"{confidence:.2f}"
+        draw.text((x_min,y_min), score_text, fill="red", font=font)
 
     # Write the current time as well.
     draw.text((20,20), datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fill="green", font=font)
@@ -148,13 +150,18 @@ def evaluate_image(inference_session,in_image_path,out_image_path):
 def process_single(image_path):
     model_path = "./model-weights-5a6b1be1fa.onnx"
     session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
-    max_score = evaluate_image(session,image_path,"processed.jpg")
-    print("Max score: ", max_score)
+    max_score = evaluate_image(session,image_path,"processed.png")
+    print("Max score:", max_score)
 
 def main():
-    process_single("./test1.png")
-    print("Sleeping 5 minutes...")
-    time.sleep(300)
+    print("Starting...")
+    if len(sys.argv) > 1:
+        process_single(sys.argv[1])
+    else:
+        print("No image specified, using test1.png")
+        process_single("./test1.png")
+        print("Sleeping 5 minutes...")
+        time.sleep(300)
 
 if __name__ == "__main__":
     main()

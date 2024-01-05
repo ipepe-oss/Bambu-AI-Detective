@@ -1,4 +1,5 @@
 build/
 .env
-
-ai-print-analyzer/*.png
+*.png
+*.jpg
+*.log
