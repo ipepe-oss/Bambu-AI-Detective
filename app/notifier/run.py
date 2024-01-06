@@ -40,10 +40,12 @@ while True:
                     if time.time() - last_notification_timestamp > reset_period_minutes*60:
                         print(f"Max score {max_score} is greater than or equal to threshold {notification_address_threshold}")
                         notification_addresses[notification_address_threshold].notify(
-                            title=f"Max score: {max_score}",
-                            body=f"Threshold: {notification_address_threshold}",
+                            title=f"Bambulab+AI Detector: Max score: {max_score} is greater than or equal to threshold {notification_address_threshold}",
+                            body=f"Bambulab+AI Detector: Max score: {max_score} is greater than or equal to threshold {notification_address_threshold}",
                             attach="/app/web/last_image.png"
                         )
+                        if not os.path.exists("/app/web/last_image.png"):
+                            print("Warning: last_image.png not found.")
                         with open(f"/app/notifier/last_notification_{notification_address_threshold}_timestamp.txt", "w") as f:
                             f.write(str(time.time()))
                     else:
