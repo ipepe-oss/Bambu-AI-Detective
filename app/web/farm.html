@@ -1,0 +1,137 @@
+<html>
+<head>
+    <title>Bambu-AI-Dectective - Farm</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <style>
+        .wrapper {
+            width: 500px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #e0e0e0;
+            padding: 3px;
+            border-radius: 3px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, .2);
+        }
+
+        .progress-bar-fill {
+            display: block;
+            height: 22px;
+            background-color: #659cef;
+            border-radius: 3px;
+
+            transition: width 500ms ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <table style="width: 90vw; position: absolute; margin: 1vw 5vw">
+    <thead>
+    <tr>
+        <th colspan="5">
+            <p>Bambu-AI-Dectective - Farm</p>
+        </th>
+        <th>
+            <small>
+                <button>Preheat all printers</button>
+            </small>
+        </th>
+    </tr>
+    <tr>
+        <th>Printer</th>
+        <th>Control</th>
+        <th>Preview</th>
+        <th>Status</th>
+        <th>AI</th>
+        <th>Send print</th>
+    </tr>
+    <tr>
+        <th><small>Sort by:</small></th>
+        <th></th>
+        <th></th>
+        <th><small>
+            <button>Printing: Shortest time left</button>
+            <button>Printing: Percent ascending</button>
+            <button>Printing: Percent descending</button>
+        </small></th>
+        <th><small><button>AI: Highest failure chance</button></small></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>abcd-1234</td>
+        <td>
+            <img src="img/control.png"/>
+        </td>
+        <td>
+            <img src="img/preview.png"/>
+        </td>
+        <td style="color: orange">
+            Idle: Preheated
+        </td>
+        <td style="color: grey">
+            Off (printer idle)
+        </td>
+        <td>
+            <label for="files">Choose a file:</label>
+
+            <select name="files" id="files">
+                <option value="cube">xyzCalibration.cube</option>
+                <option value="3dbenchy">3dBenchy.gcode</option>
+            </select>
+            <button>Send</button>
+        </td>
+    </tr>
+    <tr>
+        <td>abcd-1234</td>
+        <td>
+            <img src="img/control.png"/>
+        </td>
+        <td>
+            <img src="img/preview.png"/>
+        </td>
+
+        <td>
+            <div class="wrapper">
+                <div class="progress-bar">
+                    <span class="progress-bar-fill" style="width: 70%;"></span>
+                </div>
+            </div>
+            <p>Printing: xyz_calibration_cube.gcode (0%)</p>
+            <p>Time left: 24 minutes (out of 32 minutes)</p>
+        </td>
+        <td style="color: green">
+            AI: OK! (3.23%)
+        </td>
+        <td></td>
+    </tr>
+    <tr>
+        <td>abcd-1234</td>
+        <td>
+            <img src="img/control.png"/>
+        </td>
+        <td>
+            <img src="img/preview.png"/>
+        </td>
+
+        <td>
+            <div class="wrapper">
+                <div class="progress-bar">
+                    <span class="progress-bar-fill" style="width: 70%;"></span>
+                </div>
+            </div>
+            <p>Printing: xyz_calibration_cube.gcode (0%)</p>
+            <p>Time left: 24 minutes (out of 32 minutes)</p>
+        </td>
+        <td style="color: green">
+            AI: OK! (3.23%)
+        </td>
+        <td></td>
+    </tr>
+
+    </tbody>
+</table>
+
+</body>
+</html>
