@@ -56,6 +56,17 @@ services:
 Visit http://localhost:8080 to see the web dashboard with current ai detection status.
 ![Web Dashboard](docs/images/web-dashboard.png)
 
+## Changelog
+
+| Date       | Version     | Description     |
+|------------|-------------|-----------------|
+| 2024-01-06 | v1.0.0-beta | Initial version |
+
+## Upcoming features (in the importance order)
+1. [ ] Add ability to pause print when specific threshold is reached (Using MQTT)
+2. [ ] Add support for multiple printers (for print farmers)
+3. [ ] Add printer dashboard inspired by https://www.wolfwithsword.com/bambulab-home-assistant-dashboard/
+
 ## Architecture
 1. As a basis we are using python image. 
 2. In this python image container we are running https://github.com/nickstenning/honcho (python port of foreman) to run multiple processes in one container.
