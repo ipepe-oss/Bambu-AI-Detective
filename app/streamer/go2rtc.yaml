@@ -1,6 +1,0 @@
-streams:
-   p1s: "exec:./BambuP1Streamer ./libBambuSource.so ${STREAMER_PRINTER_ADDRESS} ${STREAMER_PRINTER_ACCESS_CODE}"
-log:
-  level: debug
-api:
-  origin: "*"

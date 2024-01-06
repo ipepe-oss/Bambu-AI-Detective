@@ -188,17 +188,20 @@ def main():
     model_path = "./model-weights-5a6b1be1fa.onnx"
     session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
     while True:
-        fetched_filename = "".join(["/tmp/fetched_",str(time.time()),".png"])
-        streamer_hostname = os.getenv("STREAMER_HOSTNAME", "localhost")
-        fetch_image_command = ["/usr/bin/ffmpeg", "-i", f"http://{streamer_hostname}:1984/api/stream.mjpeg?src=p1s", "-vframes:v", "1", fetched_filename]
+        fetched_filename = "".join(["/tmp/fetched_",str(time.time()),".jpg"])
+        streamer_printer_hostname = os.getenv("STREAMER_PRINTER_ADDRESS", "localhost")
+        streamer_access_token = os.getenv("STREAMER_PRINTER_ACCESS_CODE")
+        fetch_image_command = ["python3", "/app/streamer/run.py", streamer_printer_hostname, streamer_access_token, fetched_filename]
         # Fetch the image using the user provided command.
-        print("Executing ", fetch_image_command)
+        print("Executing ", " ".join(fetch_image_command))
         process = subprocess.run(fetch_image_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         error_code = process.returncode
         if error_code != 0:
             print("Warning: Fetch image script exited with an error: ", error_code)
-            os.remove("/app/web/last_image.png")
-            os.remove("/app/web/last_score_data.json")
+            if os.path.exists("/app/web/last_image.png"):
+                os.remove("/app/web/last_image.png")
+            if os.path.exists("/app/web/last_score_data.json"):
+                os.remove("/app/web/last_score_data.json")
         else:
             print("Processing image...")
             score_data = evaluate_image(session,fetched_filename,"".join([fetched_filename,".processed.png"]))
