@@ -10,10 +10,7 @@ This is based on work of:
  * https://github.com/TheSpaghettiDetective/obico-server/ - neural network model
 
 ## License
-This project is a collection of other projects. 
-Please see the individual projects for their licenses. 
-My changes are released under MIT.
-Because of licensing issues, I cannot build image and push it to docker hub. You need to build the image yourself.
+This project is a derivative from https://github.com/hisptoot/BambuSource2Raw so it uses same license as the original project. See [LICENSE](LICENSE) for more details.
 
 ## RUN - Getting started
 1. Clone this repo
