@@ -66,7 +66,7 @@ Visit http://localhost:8080 to see the web dashboard with current ai detection s
 6. Everything is dockerized and can be run with docker-compose
 
 ## Notifier
-Notifier is based on https://github.com/caronc/apprise and sends notifications to various services. Notifier service is reading dynamically from environment variables and can be configured to send notifications to multiple services. It will look for variables that fit this pattern: `NOTIFIER_MAX_SCORE_*_NOTIFICATION_ADDRESS` where `*` is the max score from `aidetector` that will trigger the notification. For example `NOTIFIER_MAX_SCORE_10_NOTIFICATION_ADDRESS` will send notification to the address specified in the variable when the max score is 10 percent (0.1 float).
+Notifier is based on https://github.com/caronc/apprise and sends notifications to various services. Notifier service is reading dynamically from environment variables and can be configured to send notifications to multiple services. It will look for variables that fit this pattern: `NOTIFIER_MAX_SCORE_*_NOTIFICATION_ADDRESS` where `*` is the max score from `aidetector` that will trigger the notification. For example `NOTIFIER_MAX_SCORE_10_NOTIFICATION_ADDRESS` will send notification to the address specified in the variable when the max score is 10 percent (0.1 float). For environment value insert apprise address that is supported. [Supported addresses list is available here](https://github.com/caronc/apprise?tab=readme-ov-file#supported-notifications)
 
 
 ## Streamer
