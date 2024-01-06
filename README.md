@@ -54,9 +54,11 @@ Visit http://localhost:8080 to see the web dashboard with current ai detection s
 
 ## Changelog
 
-| Date       | Version     | Description     |
-|------------|-------------|-----------------|
-| 2024-01-06 | v1.0.0-beta | Initial version |
+| Date       | Version     | Description                                                      |
+|------------|-------------|------------------------------------------------------------------|
+| 2024-01-06 | v1.0.0-beta | Initial version                                                  |
+| 2024-01-06 | v1.0.1-beta | Removed dependency on go2rtc and Bambulab prioprietary libraries |
+
 
 ## Upcoming features (in the importance order)
 1. [ ] Add ability to pause print when specific threshold is reached (Using MQTT)
@@ -66,7 +68,7 @@ Visit http://localhost:8080 to see the web dashboard with current ai detection s
 ## Architecture
 1. As a basis we are using python image. 
 2. In this python image container we are running https://github.com/nickstenning/honcho (python port of foreman) to run multiple processes in one container.
-3. The first process is the streamer. It is based on https://github.com/slynn1324/BambuP1Streamer
+3. The first process is the streamer. It is based on https://github.com/hisptoot/BambuP1PSource2Raw
 4. The second process is the web dashboard. It is a simple index.html page that pulls json and image from AI detector
 5. The third process is the AI detector. It is based on https://github.com/antirez/failed-3d-prints-bot
 6. The fourth process is the notifier. It is based on https://github.com/caronc/apprise
@@ -77,37 +79,6 @@ Notifier is based on https://github.com/caronc/apprise and sends notifications t
 
 
 ## Streamer
-Only tested on a P1S. I would expect it to work for a p1p camera. I would not expect this to work on an X1/X1C - the codecs are different and I don't believe that local network streaming is enabled. 
-
-Built and tested on Debian 12 / amd64. Other platforms may not work.
-
-Derived from https://github.com/hisptoot/BambuSource2Raw.  
-
-https://github.com/AlexxIT/go2rtc does most of the work.
-
-### DEPENDENCIES
-
-Bambu Studio Proprietary Plugin Library
-```
-wget https://public-cdn.bambulab.com/upgrade/studio/plugins/01.04.00.15/linux_01.04.00.15.zip
-unzip linux_01.04.00.15.zip
-```
-
-Go2Rtc
-```
-wget https://github.com/AlexxIT/go2rtc/releases/download/v1.6.2/go2rtc_linux_amd64
-chmod a+x go2rtc_linux_amd64
-```
-
-### ACCESS
-#### Index Page (only the MJPEG parts will work)
-```
-http://localhost:1984/links.html?src=p1s
-```
-
-#### MJPEG url
-```
-http://localhost:1984/api/stream.mjpeg?src=p1s
-```
+Only tested on a P1S. I would expect it to work for a p1p camera. I would not expect this to work on an X1/X1C - the codecs are different and I don't believe that local network streaming is enabled.
 
 
