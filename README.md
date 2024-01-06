@@ -1,4 +1,4 @@
-# Bambu P1 Camera Streamer + AI to detect spaghetti
+# Bambu P1 Camera Streamer + AI Spaghetti Detective
 This is a dockerized version of the Bambu P1 Camera Streamer + AI to detect spaghetti.
 
 This is based on work of:
