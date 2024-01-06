@@ -3,8 +3,7 @@ This is a dockerized version of the Bambu P1 Camera Streamer + AI to detect spag
 
 This is based on work of:
  * https://github.com/antirez/failed-3d-prints-bot - basis for the AI detection code
- * https://github.com/hisptoot/BambuSource2Raw - basis for the streamer
- * https://github.com/slynn1324/BambuP1Streamer - basis for this project
+ * https://github.com/hisptoot/BambuP1PSource2Raw - basis for the camera preview download
  * https://bjh21.me.uk/bedstead/ - font for image overlay
  * https://github.com/AlexxIT/go2rtc - streaming in the browser
  * https://github.com/TheSpaghettiDetective/obico-server/ - neural network model
