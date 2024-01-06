@@ -22,10 +22,14 @@ Because of licensing issues, I cannot build image and push it to docker hub. You
 4. Visit http://localhost:8080 to see the web dashboard with current ai detection status.
 
 ### Example `.env`
+All environment variables are prefixed with their respective service name. If variable is prefixed with `ALL_` it is used by all services.
 ```
-PRINTER_ADDRESS=192.168.1.111
-PRINTER_ACCESS_CODE=12345678
-REFRESH_RATE=10
+ALL_REFRESH_RATE=10
+STREAMER_PRINTER_ADDRESS=192.168.1.111
+STREAMER_PRINTER_ACCESS_CODE=12345678
+NOTIFIER_MAX_SCORE_10_NOTIFICATION_ADDRESS=https://hooks.slack.com/services/A/B/C
+NOTIFIER_MAX_SCORE_40_NOTIFICATION_ADDRESS=https://hooks.slack.com/services/A/B/C
+NOTIFIER_NOTIFICATION_RESET_PERIOD_MINUTES=60
 ```
 
 ### docker-compose.yml
@@ -58,7 +62,12 @@ Visit http://localhost:8080 to see the web dashboard with current ai detection s
 3. The first process is the streamer. It is based on https://github.com/slynn1324/BambuP1Streamer
 4. The second process is the web dashboard. It is a simple index.html page that pulls json and image from AI detector
 5. The third process is the AI detector. It is based on https://github.com/antirez/failed-3d-prints-bot
+6. The fourth process is the notifier. It is based on https://github.com/caronc/apprise
 6. Everything is dockerized and can be run with docker-compose
+
+## Notifier
+Notifier is based on https://github.com/caronc/apprise and sends notifications to various services. Notifier service is reading dynamically from environment variables and can be configured to send notifications to multiple services. It will look for variables that fit this pattern: `NOTIFIER_MAX_SCORE_*_NOTIFICATION_ADDRESS` where `*` is the max score from `aidetector` that will trigger the notification. For example `NOTIFIER_MAX_SCORE_10_NOTIFICATION_ADDRESS` will send notification to the address specified in the variable when the max score is 10 percent (0.1 float).
+
 
 ## Streamer
 Only tested on a P1S. I would expect it to work for a p1p camera. I would not expect this to work on an X1/X1C - the codecs are different and I don't believe that local network streaming is enabled. 

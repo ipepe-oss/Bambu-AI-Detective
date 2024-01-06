@@ -23,7 +23,7 @@ RUN apt-get update && apt-get install -y ffmpeg
 
 COPY app .
 
-RUN cd /app/aidetector && pip install onnxruntime pillow numpy honcho
+RUN python3 -m pip install -r requirements.txt
 
 COPY --from=builder /build/model-weights-5a6b1be1fa.onnx /app/aidetector/model-weights-5a6b1be1fa.onnx
 COPY --from=builder /build/BambuP1Streamer /app/streamer/BambuP1Streamer

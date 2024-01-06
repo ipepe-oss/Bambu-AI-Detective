@@ -1,3 +1,4 @@
 streamer: cd /app/streamer && ./go2rtc_linux_amd64
 web: cd /app/web && python3 -m http.server 8080
-aidetector: cd /app/aidetector && python3 -u analyzer.py
+aidetector: cd /app/aidetector && python3 -u run.py
+notifier: cd /app/notifier && python3 -u run.py

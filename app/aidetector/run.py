@@ -184,7 +184,7 @@ def write_file(filename, content):
 
 def main():
     print("Starting...")
-    refresh_rate = int(os.getenv("REFRESH_RATE", "30"))
+    refresh_rate = int(os.getenv("ALL_REFRESH_RATE", "30"))
     model_path = "./model-weights-5a6b1be1fa.onnx"
     session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
     while True:
@@ -197,6 +197,8 @@ def main():
         error_code = process.returncode
         if error_code != 0:
             print("Warning: Fetch image script exited with an error: ", error_code)
+            os.remove("/app/web/last_image.png")
+            os.remove("/app/web/last_score_data.json")
         else:
             print("Processing image...")
             score_data = evaluate_image(session,fetched_filename,"".join([fetched_filename,".processed.png"]))
