@@ -34,7 +34,6 @@
         var data = JSON.parse(response);
         var data_max_score = data["max_score"];
         var data_timestamp = data["timestamp"];
-        data_timestamp = new Date(data_timestamp * 1000).toLocaleString();
         var data_threshold = data["threshold"];
 
         var img = document.createElement('img');
@@ -71,7 +70,7 @@
         td.appendChild(text);
         tr.appendChild(td);
         td = document.createElement('td');
-        text = document.createTextNode(data_timestamp);
+        text = document.createTextNode(new Date(data_timestamp * 1000).toLocaleString());
         td.appendChild(text);
         tr.appendChild(td);
         td = document.createElement('td');
