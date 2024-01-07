@@ -126,9 +126,10 @@ def my_loop():
     if TURN_OFF_LIGHT_WHEN_IDLE_AFTER_MINUTES > 1:
         if chamber_light == "on" and current_status == "idle":
             if data_storage_read("last_printing_timestamp") is not None:
-                if datetime.now() - datetime.fromtimestamp(float(data_storage_read("last_printing_timestamp"))) > timedelta(minutes=TURN_OFF_LIGHT_WHEN_IDLE_AFTER_MINUTES):
-                    data_storage_write("last_printing_timestamp", None)
+                if datetime.now().timestamp() - float(data_storage_read("last_printing_timestamp")) > TURN_OFF_LIGHT_WHEN_IDLE_AFTER_MINUTES * 60:
                     client.publish(f"device/{SERIAL}/request", CMD_CHAMBER_LIGHT_OFF)
+                    data_storage_write("chamber_light", "off")
+                    data_storage_write("last_printing_timestamp", None)
             else:
                data_storage_write("last_printing_timestamp", datetime.now().timestamp())
 
