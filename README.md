@@ -44,7 +44,6 @@ services:
     env_file:
       - .env
     ports:
-      - "1984:1984"
       - "8080:8080"
     logging:
       driver: json-file
