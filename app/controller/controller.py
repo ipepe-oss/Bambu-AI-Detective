@@ -86,8 +86,6 @@ def on_message(client, userdata, msg):
                 data_storage_write("current_status", "stopped")
             else:
                 data_storage_write("current_status", "idle")
-        if "nozzle_temper" in doc["print"]:
-            data_storage_write("current_nozzle_temperature", int(doc["print"]["nozzle_temper"]))
         if "lights_report" in doc:
             if "chamber_light" in doc["lights_report"]:
                 if doc["lights_report"]["chamber_light"]["mode"] == "on":
@@ -110,7 +108,6 @@ def get_ai_max_score():
 def my_loop():
     current_status = data_storage_read("current_status")
     chamber_light = data_storage_read("chamber_light")
-    current_nozzle_temperature = data_storage_read("current_nozzle_temperature")
     ai_max_score = get_ai_max_score()
 
     if PAUSE_PRINTING_WHEN_AI_DETECTED_SCORE_ABOVE > 0 and PAUSE_PRINTING_WHEN_AI_DETECTED_SCORE_ABOVE <= 1:
