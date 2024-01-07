@@ -1,3 +1,4 @@
 web: cd /app/web && python3 -m http.server 8080
-aidetector: cd /app/aidetector && python3 -u run.py
-notifier: cd /app/notifier && python3 -u run.py
+aidetector: cd /app/aidetector && python3 -u aidetector.py
+notifier: cd /app/notifier && python3 -u notifier.py
+controller: cd /app/controller && python3 -u controller.py

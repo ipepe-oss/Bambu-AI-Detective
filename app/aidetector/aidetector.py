@@ -3,7 +3,8 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 import numpy as np
-import time, sys, subprocess, datetime, os, json
+import time, sys, subprocess, os, json
+from datetime import datetime, timedelta
 
 def image_to_tensor(image_path):
     # Load the image
@@ -104,7 +105,7 @@ def draw_boxes(image_path, output_path, boxes, confidences, threshold=0.1):
             already_drawn_boxes.append([x_min, y_min, x_max, y_max])
 
     # Write the current time as well.
-    draw.text((20,20), datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fill="green", font=font)
+    draw.text((20,20), datetime.now().strftime("%Y-%m-%d %H:%M:%S"), fill="green", font=font)
 
     # Save or display the image
     image.save(output_path)
@@ -165,7 +166,7 @@ def evaluate_image(inference_session,in_image_path,out_image_path, threshold=0.1
 
     score_data = {
         "max_score": str(max_score),
-        "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "timestamp": datetime.now().timestamp(),
         "threshold": str(threshold)
     }
 
@@ -178,38 +179,79 @@ def process_single(image_path):
     print("Max score:", max_score)
 
 def write_file(filename, content):
+    if not os.path.exists(filename):
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
     f = open(filename,"w")
     f.write(content)
     f.close()
+
+def controller_current_staus_idle():
+    if os.path.exists("/app/controller/data_storage/current_status"):
+        with open("/app/controller/data_storage/current_status", "r") as f:
+            current_status = f.read()
+            return current_status == "idle"
 
 def main():
     print("Starting...")
     refresh_rate = int(os.getenv("ALL_REFRESH_RATE", "30"))
     model_path = "./model-weights-5a6b1be1fa.onnx"
     session = ort.InferenceSession(model_path, providers=['CPUExecutionProvider'])
+    threshold = float(os.getenv("ALL_THRESHOLD", "0.1"))
     while True:
-        fetched_filename = "".join(["/tmp/fetched_",str(time.time()),".jpg"])
-        streamer_printer_hostname = os.getenv("STREAMER_PRINTER_ADDRESS", "localhost")
-        streamer_access_token = os.getenv("STREAMER_PRINTER_ACCESS_CODE")
-        fetch_image_command = ["python3", "/app/streamer/run.py", streamer_printer_hostname, streamer_access_token, fetched_filename]
-        # Fetch the image using the user provided command.
-        print("Executing ", " ".join(fetch_image_command))
-        process = subprocess.run(fetch_image_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        error_code = process.returncode
-        if error_code != 0:
-            print("Warning: Fetch image script exited with an error: ", error_code)
+        if controller_current_staus_idle():
+            print("Controller is idle, skipping image processing...")
             if os.path.exists("/app/web/last_image.png"):
                 os.remove("/app/web/last_image.png")
             if os.path.exists("/app/web/last_score_data.json"):
                 os.remove("/app/web/last_score_data.json")
         else:
-            print("Processing image...")
-            score_data = evaluate_image(session,fetched_filename,"".join([fetched_filename,".processed.png"]))
-            score_data["image_path"] = "".join([fetched_filename,".processed.png"])
-            score_data["refresh_rate"] = refresh_rate
-            json_score_data = json.dumps(score_data)
-            write_file("/app/web/last_score_data.json", json_score_data)
-            os.replace("".join([fetched_filename,".processed.png"]), "/app/web/last_image.png")
+            fetched_filename = "".join(["/tmp/fetched_",str(time.time()),".jpg"])
+            streamer_printer_hostname = os.getenv("ALL_PRINTER_ADDRESS")
+            streamer_access_token = os.getenv("ALL_PRINTER_ACCESS_CODE")
+            fetch_image_command = ["python3", "/app/camera/camera.py", streamer_printer_hostname, streamer_access_token, fetched_filename]
+            print("Fetching image...")
+    #         print("Executing ", " ".join(fetch_image_command))
+            process = subprocess.run(fetch_image_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            error_code = process.returncode
+            if error_code != 0:
+                print("Warning: Fetch image script exited with an error: ", error_code)
+                if os.path.exists("/app/web/last_image.png"):
+                    os.remove("/app/web/last_image.png")
+                if os.path.exists("/app/web/last_score_data.json"):
+                    os.remove("/app/web/last_score_data.json")
+            else:
+                print("Processing image...")
+                # if image is significantly bigger than 416x416, crop the center of the image to 416x416
+                image = Image.open(fetched_filename)
+                image_width, image_height = image.size
+                if image_width > 416*2 or image_height > 416*2:
+                    print("Image is too big, cropping...")
+                    crop_size = image_height
+                    crop_left = int((image_width - crop_size) / 2)
+                    crop_top = int((image_height - crop_size) / 2)
+                    image = image.crop((crop_left, crop_top, crop_left + crop_size, crop_top + crop_size))
+                    image.save(fetched_filename + ".cropped.jpg")
+
+                    cropped_score_data = evaluate_image(session,fetched_filename + ".cropped.jpg","".join([fetched_filename,".cropped.processed.png"]))
+                    score_data = evaluate_image(session,fetched_filename,"".join([fetched_filename,".processed.png"]))
+                    if float(cropped_score_data["max_score"]) > float(score_data["max_score"]) and float(cropped_score_data["max_score"]) > threshold:
+                        score_data = cropped_score_data
+                        score_data["refresh_rate"] = refresh_rate
+                        json_score_data = json.dumps(score_data)
+                        write_file("/app/web/last_score_data.json", json_score_data)
+                        os.replace("".join([fetched_filename,".cropped.processed.png"]), "/app/web/last_image.png")
+                    else:
+                        score_data["refresh_rate"] = refresh_rate
+                        json_score_data = json.dumps(score_data)
+                        write_file("/app/web/last_score_data.json", json_score_data)
+                        os.replace("".join([fetched_filename,".processed.png"]), "/app/web/last_image.png")
+                else:
+                    score_data = evaluate_image(session,fetched_filename,"".join([fetched_filename,".processed.png"]))
+                    score_data["image_path"] = "".join([fetched_filename,".processed.png"])
+                    score_data["refresh_rate"] = refresh_rate
+                    json_score_data = json.dumps(score_data)
+                    write_file("/app/web/last_score_data.json", json_score_data)
+                    os.replace("".join([fetched_filename,".processed.png"]), "/app/web/last_image.png")
 
         time.sleep(refresh_rate)
 

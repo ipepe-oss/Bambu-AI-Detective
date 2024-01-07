@@ -34,6 +34,7 @@
         var data = JSON.parse(response);
         var data_max_score = data["max_score"];
         var data_timestamp = data["timestamp"];
+        data_timestamp = new Date(data_timestamp * 1000).toLocaleString();
         var data_threshold = data["threshold"];
 
         var img = document.createElement('img');
@@ -89,7 +90,7 @@
         app.appendChild(p);
       }
     }).catch(function (error) {
-      var waitingtext = "Waiting for data...";
+      var waitingtext = "Waiting for data... Printer is idle?";
       var p = document.createElement('p');
       p.appendChild(document.createTextNode(waitingtext));
       app.appendChild(p);
